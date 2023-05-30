@@ -11,6 +11,7 @@ return {
       })
     end,
   },
+  "simrat39/rust-tools.nvim",
   -- use mason-null-ls to configure Formatters/Linter installation for null-ls sources
   {
     "jay-babu/mason-null-ls.nvim",
@@ -18,9 +19,20 @@ return {
     opts = function(_, opts)
       -- add more things to the ensure_installed table protecting against community packs modifying it
       opts.ensure_installed = require("astronvim.utils").list_insert_unique(opts.ensure_installed, {
+        "eslint_d",
         -- "prettier",
         -- "stylua",
       })
+      opts.handlers = {
+        eslint_d = function()
+          require("null-ls").register(require("null-ls").builtins.diagnostics.eslint_d.with {
+            condition = function(utils)
+              return utils.root_has_file ".eslintrc.json"
+                  or utils.root_has_file ".eslintrc.js"
+            end,
+          })
+        end,
+      }
     end,
   },
   {
