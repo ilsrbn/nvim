@@ -20,6 +20,7 @@ return {
       -- add more things to the ensure_installed table protecting against community packs modifying it
       opts.ensure_installed = require("astronvim.utils").list_insert_unique(opts.ensure_installed, {
         "eslint_d",
+        "prettierd",
         -- "prettier",
         -- "stylua",
       })
@@ -27,9 +28,13 @@ return {
         eslint_d = function()
           require("null-ls").register(require("null-ls").builtins.diagnostics.eslint_d.with {
             condition = function(utils)
-              return utils.root_has_file ".eslintrc.json"
-                  or utils.root_has_file ".eslintrc.js"
+              return utils.root_has_file ".eslintrc.json" or utils.root_has_file ".eslintrc.js"
             end,
+          })
+        end,
+        tsserver = function()
+          require("null-ls").register(require("null-ls").builtins.diagnostics.tsserver.with {
+            condition = function(utils) return utils.root_has_file "tsconfig.json" end,
           })
         end,
       }
